@@ -4,6 +4,7 @@ import me.time6628.clag.sponge.CatClearLag;
 import me.time6628.clag.sponge.EntityRemover;
 import me.time6628.clag.sponge.Messages;
 import me.time6628.clag.sponge.api.Type;
+import org.spongepowered.api.command.CommandException;
 import org.spongepowered.api.command.CommandResult;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
@@ -15,6 +16,7 @@ import org.spongepowered.api.entity.EntityType;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +50,7 @@ public class RemoveEntitiesCommand implements CommandExecutor {
     }
 
     @Override
-    public CommandResult execute(CommandSource src, CommandContext args) {
+    public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
         if (args.hasAny("a") ||
                 args.hasAny("h") ||
                 args.hasAny("i") ||
@@ -59,7 +61,8 @@ public class RemoveEntitiesCommand implements CommandExecutor {
                 args.getOne("entity").isPresent()) {
             Predicate<Entity> pred = null;
             if (args.hasAny("a"))
-                pred = combinePred(pred, Type.ALL);
+                //pred = combinePred(pred, Type.ALL);
+                throw new CommandException(TextSerializers.FORMATTING_CODE.deserialize("&cThis flag has been disabled. If this in fault please contact an administrator."));
             if (args.hasAny("h"))
                 pred = combinePred(pred, Type.HOSTILE);
             if (args.hasAny("i"))
@@ -67,15 +70,18 @@ public class RemoveEntitiesCommand implements CommandExecutor {
             if (args.hasAny("x"))
                 pred = combinePred(pred, Type.XP);
             if (args.hasAny("l"))
-                pred = combinePred(pred, Type.LIVING);
+                //pred = combinePred(pred, Type.LIVING);
+                throw new CommandException(TextSerializers.FORMATTING_CODE.deserialize("&cThis flag has been disabled. If this in fault please contact an administrator."));
             if (args.hasAny("m"))
-                pred = combinePred(pred, Type.ANIMAL);
+                //pred = combinePred(pred, Type.ANIMAL);
+                throw new CommandException(TextSerializers.FORMATTING_CODE.deserialize("&cThis flag has been disabled. If this in fault please contact an administrator."));
             if (args.hasAny("n"))
                 pred = combinePred(pred, Type.NAMED);
             if (args.getOne("entity").isPresent()) {
                 EntityType type = (EntityType) args.getOne("entity").get();
                 pred = combinePred(pred, type);
             }
+
             EntityRemover<Entity> remover = new EntityRemover<>(pred, Type.COMBINED);
             src.sendMessage(Text.builder().append(Messages.getPrefix()).append(Messages.colorMessage("Removing entities...")).build());
             int affectedEnts = remover.removeEntities();
